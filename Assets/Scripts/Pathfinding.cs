@@ -115,7 +115,7 @@ public class Pathfinding
         return resultNode;
     }
 
-    public List<PathfindingNode> FindPath(Vector2Int start, Vector2Int end, int maxDistance,  bool allowWalkThroughMonsters)
+    public List<PathfindingNode> FindPath(Vector2Int start, Vector2Int end, int maxDistance,  bool allowWalkThroughMonsters, bool ignoreEndTileCheck = false)
     {
         PathfindingNode startNode = GetNode(start);
         PathfindingNode endNode   = GetNode(end);
@@ -152,10 +152,13 @@ public class Pathfinding
                     continue;
                 }
 
-                if (!neighbourNode.IsWalkable(allowWalkThroughMonsters && neighbourNode != endNode))
+                if (neighbourNode != endNode || !ignoreEndTileCheck)
                 {
-                    closedList.Add(neighbourNode);
-                    continue;
+                    if (!neighbourNode.IsWalkable(allowWalkThroughMonsters && neighbourNode != endNode))
+                    {
+                        closedList.Add(neighbourNode);
+                        continue;
+                    }
                 }
 
                 int distanceBetween = CalculateDistance(currentNode, neighbourNode);
@@ -189,6 +192,11 @@ public class Pathfinding
 
     public int CalculatePathDistance(List<PathfindingNode> path)
     {
+        if (!path.Any())
+        {
+            return Int32.MaxValue;
+        }
+
         int distance = 0;
 
         for (int i = 1; i < path.Count; i++)

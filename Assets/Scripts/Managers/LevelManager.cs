@@ -72,12 +72,12 @@ public class LevelManager : MyMonoBehaviour
     {
         Tile spawnTile = GM.GridManager.GetTileByCoordinates(3, 4);
         EnemyManager enemyGo = Instantiate(EnemyPrefab, spawnTile.CharacterPosition, Quaternion.identity, transform);
-        enemyGo.Init(spawnTile, new Stats(2, 5, 10, 4, 10, this));
+        enemyGo.Init(spawnTile, new Stats(2, 5, 4, 4, 3, this));
         enemyGo.CharacterDied += EnemyGoOnCharacterDied;
         _enemies.Add(enemyGo);
         spawnTile = GM.GridManager.GetTileByCoordinates(4, 3);
         enemyGo = Instantiate(EnemyPrefab, spawnTile.CharacterPosition, Quaternion.identity, transform);
-        enemyGo.Init(spawnTile, new Stats(2, 5, 10, 4, 10, this));
+        enemyGo.Init(spawnTile, new Stats(2, 5, 4, 4, 3, this));
         _enemies.Add(enemyGo);
     }
 

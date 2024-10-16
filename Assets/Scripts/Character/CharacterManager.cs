@@ -137,7 +137,7 @@ public abstract class CharacterManager : MyMonoBehaviour
             return false;
         }
 
-        _ = GM.GridManager.GetPathToTile(CurrentTile.Coordinates, enemyTile.Coordinates, Int32.MaxValue, false, out int distance);
+        int distance = GM.GridManager.GetDistance(CurrentTile.Coordinates, enemyTile.Coordinates, false);
         if (!Stats.CanAttack(enemyStats, distance))
         {
             return false;
@@ -161,6 +161,8 @@ public abstract class CharacterManager : MyMonoBehaviour
 
     protected virtual void Die()
     {
+        CurrentTile.RemoveCharacterFromTile(this);
+
         CharacterDied?.Invoke(this);
     }
 }

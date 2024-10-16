@@ -61,6 +61,13 @@ public class GridManager : MyMonoBehaviour
         return false;
     }
 
+    public int GetDistance(Vector2Int start, Vector2Int end, bool allowWalkThroughMonsters)
+    {
+        Pathfinding pathfinding = new Pathfinding(GridSize, this);
+        List<PathfindingNode> nodes = pathfinding.FindPath(start, end, Int32.MaxValue, allowWalkThroughMonsters, true);
+        return pathfinding.CalculatePathDistance(nodes);
+    }
+
     public Tile GetTileByCoordinates(Vector2Int coordinates)
     {
         return GetTileByCoordinates(coordinates.x, coordinates.y);

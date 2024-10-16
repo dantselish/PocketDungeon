@@ -23,6 +23,6 @@ public class EnemyManager : CharacterManager
     protected override void Die()
     {
         base.Die();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }
