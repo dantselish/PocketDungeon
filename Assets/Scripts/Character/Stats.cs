@@ -180,6 +180,18 @@ public class Stats
         }
     }
 
+    public OneStat GetRemaining(StatType statType)
+        => statType switch
+           {
+               StatType.HP           => CurrentHp,
+               StatType.SPEED        => RemainingSpeed,
+               StatType.ATTACK       => RemainingAttack,
+               StatType.DEFENCE      => RemainingDefence,
+               StatType.ATTACK_RANGE => RemainingAttackRange,
+
+               _ => null
+           };
+
     public OneStat GetTotalMax(StatType statType)
         => statType switch
            {

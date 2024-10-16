@@ -57,15 +57,15 @@ public class LevelManager : MyMonoBehaviour
         return new List<Vector2Int>() { new Vector2Int(3, 4), new Vector2Int( 4, 3) };
     }
 
-    public void RegisterDiceEnergyBonus(DebugStatText statText)
+    public void RegisterDiceEnergyBonus(StatBox statBox)
     {
-        statText.BonusApplied += StatTextOnBonusApplied;
+        statBox.BonusApplied += StatTextOnBonusApplied;
     }
 
     private void SpawnHeroAndInit()
     {
         _hero = Instantiate(HeroPrefab, GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()).CharacterPosition, Quaternion.identity, transform);
-        _hero.Init(GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()), new Stats(1, 10, 0, 0, 10, this));
+        _hero.Init(GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()), new Stats(6, 1, 1, 1, 2, this));
     }
 
     private void SpawnEnemies()

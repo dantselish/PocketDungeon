@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField] private DebugUI DebugUI;
+    [FormerlySerializedAs("DebugUI")] [SerializeField] private UI ui;
 
     public GridManager  GridManager  { get; private set; }
     public LevelManager LevelManager { get; private set; }
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
         GridManager.Init();
         LevelManager.InitLevel();
  
-        DebugUI.Init();
+        ui.Init();
     }
 }
 
