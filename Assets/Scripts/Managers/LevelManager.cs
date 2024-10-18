@@ -14,6 +14,7 @@ public class LevelManager : MyMonoBehaviour
     private List<EnemyManager> _enemies;
     private TurnState _currentTurnState;
     private List<int> _energyDiceBonuses;
+    private Level _level;
 
     public event Action<TurnState> TurnStateChanged;
 
@@ -21,12 +22,26 @@ public class LevelManager : MyMonoBehaviour
     public TurnState TurnState => _currentTurnState;
 
 
-    public void InitLevel()
+    public void InitNextLevel()
     {
-        _enemies = new List<EnemyManager>();
+        Level nextLevelPrefab = GM.LevelsContainer.GetNextLevelPrefab(_level);
+        Level nextLevel = Instantiate(nextLevelPrefab, transform);
+        if (nextLevel)
+        {
+            if (_level)
+            {
+                _level.SetLevelActive(false);
+            }
 
-        SpawnHeroAndInit();
-        SpawnEnemies();
+            _level = nextLevel;
+            _level.SetLevelActive(true);
+
+            GM.GridManager.InitTiles(_level.GetTiles());
+        }
+
+        MoveHeroToNewLevel();
+
+        InitEnemies(_level.GetAllEnemies());
 
         SetTurnState(TurnState.ENERGY, 1f);
     }
@@ -49,7 +64,7 @@ public class LevelManager : MyMonoBehaviour
 
     public Vector2Int GetHeroSpawnPos()
     {
-        return new Vector2Int(0, 0);
+        return _level.HeroStartPosition;
     }
 
     public List<Vector2Int> GetEnemiesSpawnPos()
@@ -57,28 +72,38 @@ public class LevelManager : MyMonoBehaviour
         return new List<Vector2Int>() { new Vector2Int(3, 4), new Vector2Int( 4, 3) };
     }
 
-    public void RegisterDiceEnergyBonus(StatBox statBox)
+    public void RegisterDiceBonus(StatBox statBox)
     {
-        statBox.BonusApplied += StatTextOnBonusApplied;
+        statBox.BonusApplied += StatBoxOnBonusApplied;
     }
 
-    private void SpawnHeroAndInit()
+    public void RegisterLevelHeal(HealButton healButton)
     {
-        _hero = Instantiate(HeroPrefab, GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()).CharacterPosition, Quaternion.identity, transform);
-        _hero.Init(GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()), new Stats(6, 1, 1, 1, 2, this));
+        healButton.Healed += HealButtonOnHealed;
     }
 
-    private void SpawnEnemies()
+    private void MoveHeroToNewLevel()
     {
-        Tile spawnTile = GM.GridManager.GetTileByCoordinates(3, 4);
-        EnemyManager enemyGo = Instantiate(EnemyPrefab, spawnTile.CharacterPosition, Quaternion.identity, transform);
-        enemyGo.Init(spawnTile, new Stats(2, 5, 4, 4, 3, this));
-        enemyGo.CharacterDied += EnemyGoOnCharacterDied;
-        _enemies.Add(enemyGo);
-        spawnTile = GM.GridManager.GetTileByCoordinates(4, 3);
-        enemyGo = Instantiate(EnemyPrefab, spawnTile.CharacterPosition, Quaternion.identity, transform);
-        enemyGo.Init(spawnTile, new Stats(2, 5, 4, 4, 3, this));
-        _enemies.Add(enemyGo);
+        if (!_hero)
+        {
+            _hero = Instantiate(HeroPrefab, transform);
+            _hero.Init(this);
+        }
+
+        List<Tile> path = new List<Tile>(){ GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()) };
+        _hero.Move(path, true);
+    }
+
+    private void InitEnemies(List<EnemyManager> enemies)
+    {
+        _enemies = enemies;
+
+        foreach (EnemyManager enemy in _enemies)
+        {
+            enemy.Init(this);
+
+            enemy.CharacterDied += EnemyOnCharacterDied;
+        }
     }
 
     private void SetTurnState(TurnState turnState, float delay = 0.0f)
@@ -113,7 +138,7 @@ public class LevelManager : MyMonoBehaviour
     private void NextTurnState()
     {
         ++_currentTurnState;
-        if (_currentTurnState >= TurnState.AFTER_LAST)
+        if (_currentTurnState >= TurnState.AFTER_LAST_DEFAULT_TURN_STATE)
         {
             _currentTurnState = TurnState.ENERGY;
         }
@@ -129,6 +154,11 @@ public class LevelManager : MyMonoBehaviour
         {
             foreach (EnemyManager enemyManager in _enemies)
             {
+                if (!enemyManager)
+                {
+                    continue;
+                }
+
                 Tile attackTile = GM.GridManager.GetAttackHeroTile(enemyManager.Coordinates, enemyManager.Stats.AttackRange.Value);
                 enemyManager.MoveToPosition(attackTile);
                 yield return new WaitForSeconds(3f);
@@ -164,28 +194,58 @@ public class LevelManager : MyMonoBehaviour
         _energyDiceBonuses = GM.DiceManager.GetDiceValues();
     }
 
-    private void StatTextOnBonusApplied(int value)
+    private void StatBoxOnBonusApplied(StatBoxBonusAppliedParams eventParams)
     {
-        if (_currentTurnState != TurnState.ENERGY)
+        if (eventParams.isEnergyBonus)
+        {
+            if (_currentTurnState != TurnState.ENERGY)
+            {
+                return;
+            }
+
+            Hero.ApplyAdditionalStat(eventParams.statType, eventParams.diceValue);
+
+            _energyDiceBonuses.Remove(eventParams.diceValue);
+
+            if (!_energyDiceBonuses.Any())
+            {
+                NextTurnState();
+            }
+        }
+
+        if (eventParams.isLevelBonus)
+        {
+            if (_currentTurnState != TurnState.LEVEL_WON)
+            {
+                return;
+            }
+
+            Hero.ApplyUpgradeStat(eventParams.statType);
+
+            SetTurnState(TurnState.LOADING_NEXT_LEVEL);
+        }
+    }
+
+    private void HealButtonOnHealed()
+    {
+        if (_currentTurnState != TurnState.LEVEL_WON)
         {
             return;
         }
 
-        _energyDiceBonuses.Remove(value);
+        Hero.Heal();
 
-        if (!_energyDiceBonuses.Any())
-        {
-            NextTurnState();
-        }
+        SetTurnState(TurnState.LOADING_NEXT_LEVEL);
     }
 
-    private void EnemyGoOnCharacterDied(CharacterManager enemy)
+
+    private void EnemyOnCharacterDied(CharacterManager enemy)
     {
         EnemyManager enemyManager = enemy as EnemyManager;
 
         if (!enemyManager)
         {
-            Debug.LogError($"Method {nameof(EnemyGoOnCharacterDied)} was called by non enemy!");
+            Debug.LogError($"Method {nameof(EnemyOnCharacterDied)} was called by non enemy!");
             return;
         }
 
@@ -193,7 +253,7 @@ public class LevelManager : MyMonoBehaviour
 
         if (!_enemies.Any())
         {
-            Debug.Log("WIN");
+            SetTurnState(TurnState.LEVEL_WON);
         }
     }
 }
@@ -207,5 +267,7 @@ public enum TurnState
     ENEMY_MOVEMENT,
     ENEMY_ATTACK,
 
-    AFTER_LAST
+    AFTER_LAST_DEFAULT_TURN_STATE,
+    LEVEL_WON,
+    LOADING_NEXT_LEVEL
 }

@@ -8,6 +8,7 @@ public class GridManager : MyMonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Vector2Int GridSize;
+    [SerializeField] private Vector2Int TileSize;
 
     [Space]
     [Header("References")]
@@ -15,11 +16,6 @@ public class GridManager : MyMonoBehaviour
 
     private List<Tile> _tiles = new List<Tile>();
 
-
-    public void Init()
-    {
-        SpawnTiles();
-    }
 
     public List<Tile> GetPathToTile(Vector2Int start, Vector2Int end, int maxDistance, bool allowWalkThroughMonsters, out int distance)
     {
@@ -92,6 +88,18 @@ public class GridManager : MyMonoBehaviour
         return attackNode.PathfindingNode.Tile;
     }
 
+    public void InitTiles(IEnumerable<Tile> tiles)
+    {
+        _tiles.Clear();
+        foreach (Tile tile in tiles)
+        {
+            Vector3 tilePos = tile.transform.position;
+            Vector2Int coordinates = new Vector2Int((int) (tilePos.x / TileSize.x - 0.5f), (int) (tilePos.z / TileSize.y - 0.5f));
+            tile.Init(coordinates);
+            _tiles.Add(tile);
+        }
+    }
+
     private void SpawnTiles()
     {
         for (int curX = 0; curX < GridSize.x; curX++)
@@ -109,7 +117,7 @@ public class GridManager : MyMonoBehaviour
                 {
                     isObstacle = true;
                 }
-                tile.Init(curX, curY, isObstacle);
+                //tile.Init(curX, curY, isObstacle);
                 _tiles.Add(tile);
             }
         }

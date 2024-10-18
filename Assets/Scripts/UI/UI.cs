@@ -4,9 +4,10 @@ using UnityEngine.UI;
 
 public class UI : MyMonoBehaviour
 {
-    [SerializeField] private StatsScreen StatsScreen;
-    [SerializeField] private HeroHPUI    HeroHP;
-    [SerializeField] private Button      EndHeroTurnButton;
+    [SerializeField] private StatsScreen  StatsScreen;
+    [SerializeField] private HealthScreen HealthScreen;
+    [SerializeField] private HeroHPUI     HeroHP;
+    [SerializeField] private Button       EndHeroTurnButton;
 
 
     public void Init()
@@ -14,6 +15,7 @@ public class UI : MyMonoBehaviour
         Stats heroStats = GM.LevelManager.Hero.Stats;
 
         StatsScreen.Init(heroStats);
+        HealthScreen.Init();
         HeroHP.Init(heroStats);
 
         EndHeroTurnButton.onClick.AddListener(OnEndHeroTurnButtonClicked);

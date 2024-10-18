@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public LevelManager LevelManager { get; private set; }
     public DiceManager  DiceManager  { get; private set; }
 
+    public LevelsContainer LevelsContainer;
+
 
     private void Awake()
     {
@@ -37,8 +39,7 @@ public class GameManager : MonoBehaviour
 
     private void Initialize()
     {
-        GridManager.Init();
-        LevelManager.InitLevel();
+        LevelManager.InitNextLevel();
  
         ui.Init();
     }

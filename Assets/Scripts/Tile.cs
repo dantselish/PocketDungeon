@@ -3,19 +3,17 @@ using UnityEngine;
 
 public class Tile : MyMonoBehaviour
 {
-    [SerializeField] private GameObject DebugVisualEmpty;
-    [SerializeField] private GameObject DebugVisualObstacle;
     [SerializeField] private List<Transform> TileCorners;
+    [SerializeField] private bool            Obstacle;
 
     private Vector2Int _coordinates = Vector2Int.zero;
-    private bool _isObstacle = false;
     private CharacterManager _characterOnTile;
 
     public Vector2 SizeOnGrid => Vector2.one;
     public Vector2Int Coordinates => _coordinates;
     public Vector3 CharacterPosition => transform.position + Vector3.up * 0.1f;
-    public bool IsOccupied => _isObstacle || HasCharacter;
-    public bool IsObstacle => _isObstacle;
+    public bool IsOccupied => Obstacle || HasCharacter;
+    public bool IsObstacle => Obstacle;
     public bool HasCharacter => _characterOnTile;
     public bool HasHero
     {
@@ -32,13 +30,9 @@ public class Tile : MyMonoBehaviour
     public bool HasEnemy => HasCharacter && !HasHero;
 
 
-    public void Init(int x, int y, bool isObstacle)
+    public void Init(Vector2Int coordinates)
     {
-        _coordinates = new Vector2Int(x, y);
-        _isObstacle = isObstacle;
-
-        DebugVisualEmpty.SetActive(!isObstacle);
-        DebugVisualObstacle.SetActive(isObstacle);
+        _coordinates = coordinates;
     }
 
     public void SetCharacterOnTile(CharacterManager character)

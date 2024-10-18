@@ -19,10 +19,4 @@ public class EnemyManager : CharacterManager
     {
         TryAttack(heroManager, heroManager.CurrentTile, true);
     }
-
-    protected override void Die()
-    {
-        base.Die();
-        Destroy(gameObject);
-    }
 }

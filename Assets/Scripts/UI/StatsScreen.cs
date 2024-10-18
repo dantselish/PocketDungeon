@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatsScreen : MonoBehaviour
+public class StatsScreen : MyMonoBehaviour
 {
     [SerializeField] private DiceResultUI diceResultUIPrefab;
     [SerializeField] private LayoutGroup diceContainer;

@@ -4,17 +4,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class StatBox : MyMonoBehaviour, IDropHandler
+public class StatBox : MyMonoBehaviour, IDropHandler, IPointerClickHandler
 {
     [SerializeField] private TMP_Text Text;
     [SerializeField] private Image    Image;
 
-    private bool _isActive;
+    private bool _isWaitingForEnergyUpgrade;
+    private bool _isWaitingForLevelUpgrade;
     private bool _canUpgradeByEnergy;
 
     public StatType StatType;
 
-    public event Action<int> BonusApplied;
+    public event Action<StatBoxBonusAppliedParams> BonusApplied;
 
 
     public void Init(Stats heroStats)
@@ -24,12 +25,9 @@ public class StatBox : MyMonoBehaviour, IDropHandler
 
         _canUpgradeByEnergy = StatsExtensions.GetEnergyUpgradableStatTypes().Contains(StatType);
 
-        if (_canUpgradeByEnergy)
-        {
-            GM.LevelManager.RegisterDiceEnergyBonus(this);
-        }
+        GM.LevelManager.RegisterDiceBonus(this);
 
-        SetActiveStatus(true);
+        SetWaitingForEnergyUpgradeStatus(true);
 
         oneStat.ValueChanged += OnTotalValueChanged;
         GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
@@ -37,7 +35,7 @@ public class StatBox : MyMonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (!_isActive)
+        if (!_isWaitingForEnergyUpgrade)
         {
             return;
         }
@@ -46,9 +44,8 @@ public class StatBox : MyMonoBehaviour, IDropHandler
         DiceResultUI diceResultUI = go.GetComponent<DiceResultUI>();
         if (diceResultUI)
         {
-            GM.LevelManager.Hero.Stats.SetAdditionalStat(StatType, diceResultUI.Value);
-            BonusApplied?.Invoke(diceResultUI.Value);
-            SetActiveStatus(false);
+            BonusApplied?.Invoke(new StatBoxBonusAppliedParams(){ isEnergyBonus = true, isLevelBonus = false, diceValue = diceResultUI.Value, statType = StatType });
+            SetWaitingForEnergyUpgradeStatus(false);
             Destroy(diceResultUI.gameObject);
         }
     }
@@ -58,15 +55,18 @@ public class StatBox : MyMonoBehaviour, IDropHandler
         Text.SetText(value.ToString());
     }
 
-    private void SetActiveStatus(bool isActive)
+    private void SetWaitingForEnergyUpgradeStatus(bool isActive)
     {
-        if (!_canUpgradeByEnergy)
-        {
-            _isActive = false;
-            return;
-        }
+        _isWaitingForEnergyUpgrade = isActive;
 
-        _isActive = isActive;
+        Color color = Image.color;
+        color.a = isActive ? 1f : 0.7f;
+        Image.color = color;
+    }
+
+    private void SetWaitingForLevelUpgradeStatus(bool isActive)
+    {
+        _isWaitingForLevelUpgrade = isActive;
 
         Color color = Image.color;
         color.a = isActive ? 1f : 0.7f;
@@ -75,7 +75,15 @@ public class StatBox : MyMonoBehaviour, IDropHandler
 
     private void LevelManagerOnTurnStateChanged(TurnState state)
     {
-        SetActiveStatus(state == TurnState.ENERGY);
+        if (state == TurnState.ENERGY)
+        {
+            SetWaitingForEnergyUpgradeStatus(_canUpgradeByEnergy);
+        }
+
+        if (state == TurnState.LEVEL_WON)
+        {
+            SetWaitingForLevelUpgradeStatus(true);
+        }
     }
 
     private void OnTotalValueChanged(int value)
@@ -83,4 +91,19 @@ public class StatBox : MyMonoBehaviour, IDropHandler
         SetText(value);
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_isWaitingForLevelUpgrade)
+        {
+            BonusApplied?.Invoke(new StatBoxBonusAppliedParams(){ isEnergyBonus = false, isLevelBonus = true, diceValue = 0, statType = StatType });
+        }
+    }
+}
+
+public struct StatBoxBonusAppliedParams
+{
+    public bool isEnergyBonus;
+    public bool isLevelBonus;
+    public int  diceValue;
+    public StatType statType;
 }

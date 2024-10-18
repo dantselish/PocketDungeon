@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 public class HealthBar : MyMonoBehaviour
@@ -17,6 +18,14 @@ public class HealthBar : MyMonoBehaviour
         AttackText.SetText(stats.RemainingAttack.Value.ToString());
         DefenceText.SetText(stats.RemainingDefence.Value.ToString());
         AttackRangeText.SetText(stats.RemainingAttackRange.Value.ToString());
+    }
+
+    private void Update()
+    {
+        Vector3 oldRotation = transform.rotation.eulerAngles;
+        Vector3 newRotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position).eulerAngles;
+        newRotation.y = oldRotation.y;
+        transform.rotation = Quaternion.Euler(newRotation);
     }
 
     public void OnHealthChanged(int newValue)

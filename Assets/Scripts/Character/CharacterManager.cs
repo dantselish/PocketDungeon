@@ -3,14 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 public abstract class CharacterManager : MyMonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] private int Hp;
+    [SerializeField] private int Speed;
+    [SerializeField] private int Attack;
+    [SerializeField] private int Defence;
+    [SerializeField] private int AttackRange;
+
+    [Space]
+    [SerializeField] private Vector2Int startCoordinates;
+
+    [FormerlySerializedAs("HealthBar")]
+    [Header("References")]
     [SerializeField] private HealthBar healthBar;
+    [SerializeField] private CharacterAnimationManager animationManager;
 
     private IEnumerator _movementCoroutine;
     private Tile _currentTile;
+    private GridManager _gridManager;
 
     public Stats Stats { get; protected set; }
 
@@ -49,9 +64,9 @@ public abstract class CharacterManager : MyMonoBehaviour
     public event Action<CharacterManager> CharacterDied;
 
 
-    public void Init(Tile startTile, Stats stats)
+    public void Init(LevelManager levelManager)
     {
-        Stats = stats;
+        Stats = new Stats(Hp, Speed, Attack, Defence, AttackRange, levelManager);
 
         if (healthBar)
         {
@@ -60,10 +75,12 @@ public abstract class CharacterManager : MyMonoBehaviour
             Stats.RemainingAttack.ValueChanged       += healthBar.OnAttackChanged;
             Stats.RemainingDefence.ValueChanged      += healthBar.OnDefenceChanged;
             Stats.RemainingAttackRange.ValueChanged  += healthBar.OnAttackRangeChanged;
-            healthBar.Init(stats);
+            healthBar.Init(Stats);
         }
 
-        Move(new List<Tile>(){ startTile }, true);
+        GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
+
+        Move(new List<Tile>(){ GM.GridManager.GetTileByCoordinates(startCoordinates) }, true);
     }
 
     protected Tile GetMyTile()
@@ -99,6 +116,7 @@ public abstract class CharacterManager : MyMonoBehaviour
 
         IEnumerator moveCoroutine()
         {
+            animationManager.Move(true);
             foreach (Tile tile in path)
             {
                 MoveToTileImmediately(tile);
@@ -106,8 +124,8 @@ public abstract class CharacterManager : MyMonoBehaviour
                 {
                     yield return new WaitForSeconds(1f);
                 }
-
             }
+            animationManager.Move(false);
 
             _movementCoroutine = null;
         }
@@ -122,7 +140,8 @@ public abstract class CharacterManager : MyMonoBehaviour
     #region Attack
     public void TakeDamage(int totalAttackPoint)
     {
-        Stats.TakeDamage(totalAttackPoint);
+        Stats.TakeDamage(totalAttackPoint, out int totalDamage);
+        animationManager.TakeDamage(totalDamage);
 
         if (Stats.CurrentHp.Value <= 0)
         {
@@ -153,16 +172,53 @@ public abstract class CharacterManager : MyMonoBehaviour
             return false;
         }
 
+        animationManager.Attack();
         int attackPointsUsed = Stats.AttackEnemy(enemyManager.Stats, useMaxAttackPoints);
         enemyManager.TakeDamage(attackPointsUsed);
         return true;
     }
     #endregion
 
+    public void Heal()
+    {
+        animationManager.Heal();
+        Stats.Heal();
+    }
+
+    public void ApplyAdditionalStat(StatType statType, int value)
+    {
+        Stats.SetAdditionalStat(statType, value);
+    }
+
+    public void ApplyUpgradeStat(StatType statType)
+    {
+        animationManager.Cheer();
+        Stats.AddUpgradeToStat(statType);
+    }
+
     protected virtual void Die()
     {
+        animationManager.Die();
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
+
         CurrentTile.RemoveCharacterFromTile(this);
 
         CharacterDied?.Invoke(this);
+    }
+
+    private void LevelManagerOnTurnStateChanged(TurnState state)
+    {
+        if (state == TurnState.NONE || state >= TurnState.AFTER_LAST_DEFAULT_TURN_STATE)
+        {
+            animationManager.Battle(false);
+        }
+        else
+        {
+            animationManager.Battle(true);
+        }
     }
 }

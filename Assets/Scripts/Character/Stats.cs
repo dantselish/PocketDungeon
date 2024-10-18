@@ -113,9 +113,9 @@ public class Stats
 
     private void LevelManagerOnTurnStateChanged(TurnState turnState)
     {
-        if (turnState == TurnState.NONE || turnState == TurnState.ENERGY)
+        if (turnState == TurnState.NONE || turnState == TurnState.ENERGY || turnState == TurnState.LEVEL_WON)
         {
-            PrepareTurn();
+            ClearAdditionalStats();
         }
     }
     #endregion
@@ -155,15 +155,16 @@ public class Stats
         return attackPointsUsed;
     }
 
-    public void TakeDamage(int totalAttackPoints)
+    public void TakeDamage(int totalAttackPoints, out int totalDamage)
     {
+        totalDamage = 0;
         if (RemainingDefence.Value > totalAttackPoints)
         {
             return;
         }
 
-        int damage = Mathf.Min(totalAttackPoints / RemainingDefence.Value, CurrentHp.Value);
-        CurrentHp.Value -= damage;
+        totalDamage = Mathf.Min(totalAttackPoints / RemainingDefence.Value, CurrentHp.Value);
+        CurrentHp.Value -= totalDamage;
     }
 
     public void SetAdditionalStat(StatType statType, int value)
@@ -178,6 +179,22 @@ public class Stats
                 Debug.LogError($"Cannot add additional value to {nameof(StatType)} {statType.ToString()}!");
                 return;
         }
+    }
+
+    public void AddUpgradeToStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.SPEED:        ++Speed.Value;       break;
+            case StatType.ATTACK:       ++Attack.Value;      break;
+            case StatType.DEFENCE:      ++Defence.Value;     break;
+            case StatType.ATTACK_RANGE: ++AttackRange.Value; break;
+        }
+    }
+
+    public void Heal()
+    {
+        CurrentHp.Value = MaxHp.Value;
     }
 
     public OneStat GetRemaining(StatType statType)
@@ -204,7 +221,7 @@ public class Stats
                _ => null
            };
 
-    private void PrepareTurn()
+    private void ClearAdditionalStats()
     {
         AdditionalSpeed.Value       = 0;
         AdditionalAttack.Value      = 0;
