@@ -226,7 +226,7 @@ public abstract class CharacterManager : MyMonoBehaviour
 
     private void LevelManagerOnTurnStateChanged(TurnState state)
     {
-        if (state == TurnState.NONE || state >= TurnState.AFTER_LAST_DEFAULT_TURN_STATE)
+        if (state == TurnState.LEVEL_WON)
         {
             animationManager.Battle(false);
         }

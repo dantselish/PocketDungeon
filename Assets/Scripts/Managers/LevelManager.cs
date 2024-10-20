@@ -22,7 +22,13 @@ public class LevelManager : MyMonoBehaviour
     public TurnState TurnState => _currentTurnState;
 
 
-    public void InitNextLevel()
+    public void InitFirstLevel()
+    {
+        SetTurnState(TurnState.LOADING_NEXT_LEVEL);
+        InitNextLevel();
+    }
+
+    private void InitNextLevel()
     {
         Level nextLevelPrefab = GM.LevelsContainer.GetNextLevelPrefab(_level);
         Level nextLevel = Instantiate(nextLevelPrefab, transform);
@@ -43,7 +49,7 @@ public class LevelManager : MyMonoBehaviour
 
         InitEnemies(_level.GetAllEnemies());
 
-        SetTurnState(TurnState.ENERGY, 1f);
+        SetTurnState(TurnState.ENERGY, 3f);
     }
 
     public void EndHeroTurn()

@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     private void Initialize()
     {
-        LevelManager.InitNextLevel();
+        LevelManager.InitFirstLevel();
  
         ui.Init();
     }
