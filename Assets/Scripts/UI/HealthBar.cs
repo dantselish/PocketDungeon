@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -22,10 +22,11 @@ public class HealthBar : MyMonoBehaviour
 
     private void Update()
     {
-        Vector3 oldRotation = transform.rotation.eulerAngles;
-        Vector3 newRotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position).eulerAngles;
-        newRotation.y = oldRotation.y;
-        transform.rotation = Quaternion.Euler(newRotation);
+        Vector3 lookPosition = Camera.main.transform.position;
+        lookPosition.x = transform.position.x;
+        Vector3 euler = transform.rotation.eulerAngles;
+        transform.LookAt(lookPosition);
+        //transform.rotation = Quaternion.Euler(euler);
     }
 
     public void OnHealthChanged(int newValue)

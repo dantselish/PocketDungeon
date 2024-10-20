@@ -11,7 +11,7 @@ public class Tile : MyMonoBehaviour
 
     public Vector2 SizeOnGrid => Vector2.one;
     public Vector2Int Coordinates => _coordinates;
-    public Vector3 CharacterPosition => transform.position + Vector3.up * 0.1f;
+    public Vector3 CharacterPosition => transform.position + Vector3.up * 0.01f;
     public bool IsOccupied => Obstacle || HasCharacter;
     public bool IsObstacle => Obstacle;
     public bool HasCharacter => _characterOnTile;

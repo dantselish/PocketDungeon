@@ -78,6 +78,8 @@ public abstract class CharacterManager : MyMonoBehaviour
             healthBar.Init(Stats);
         }
 
+        animationManager.Init();
+
         GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
 
         Move(new List<Tile>(){ GM.GridManager.GetTileByCoordinates(startCoordinates) }, true);
@@ -89,6 +91,11 @@ public abstract class CharacterManager : MyMonoBehaviour
     }
 
     #region Movement
+    public void LookAt(Vector3 position)
+    {
+        animationManager.SetLookAtTarget(position);
+    }
+
     public void Move(List<Tile> path, bool immediate = false)
     {
         if (immediate)
@@ -102,11 +109,6 @@ public abstract class CharacterManager : MyMonoBehaviour
         }
     }
 
-    private void MoveToTileImmediately(Tile tile)
-    {
-        MoveToPositionImmediately(tile.CharacterPosition);
-    }
-
     private void MovePath(List<Tile> path)
     {
         CurrentTile = path.Last();
@@ -117,10 +119,17 @@ public abstract class CharacterManager : MyMonoBehaviour
         IEnumerator moveCoroutine()
         {
             animationManager.Move(true);
-            foreach (Tile tile in path)
+            for (int i = 0; i < path.Count; i++)
             {
-                MoveToTileImmediately(tile);
-                if (tile != path.Last())
+                Tile tile = path[i];
+
+                if (i != 0)
+                {
+                    animationManager.SetLookAtTarget(path[i].CharacterPosition);
+                }
+
+                MoveToPosition(tile.CharacterPosition, i == 0 ? 0f : 1f);
+                if (i != 0)
                 {
                     yield return new WaitForSeconds(1f);
                 }
@@ -131,17 +140,17 @@ public abstract class CharacterManager : MyMonoBehaviour
         }
     }
 
-    private void MoveToPositionImmediately(Vector3 position)
+    private void MoveToPosition(Vector3 position, float duration)
     {
-        transform.position = position;
+        animationManager.MoveTo(position, duration);
     }
     #endregion
 
     #region Attack
-    public void TakeDamage(int totalAttackPoint)
+    public void TakeDamage(int totalAttackPoint, Vector3 attackerPos)
     {
         Stats.TakeDamage(totalAttackPoint, out int totalDamage);
-        animationManager.TakeDamage(totalDamage);
+        animationManager.TakeDamage(totalDamage, attackerPos);
 
         if (Stats.CurrentHp.Value <= 0)
         {
@@ -172,10 +181,15 @@ public abstract class CharacterManager : MyMonoBehaviour
             return false;
         }
 
-        animationManager.Attack();
-        int attackPointsUsed = Stats.AttackEnemy(enemyManager.Stats, useMaxAttackPoints);
-        enemyManager.TakeDamage(attackPointsUsed);
+        enemyManager.LookAt(transform.position);
+        animationManager.Attack(enemyManager.transform.position, onConnect);
         return true;
+
+        void onConnect()
+        {
+            int attackPointsUsed = Stats.AttackEnemy(enemyManager.Stats, useMaxAttackPoints);
+            enemyManager.TakeDamage(attackPointsUsed, transform.position);
+        }
     }
     #endregion
 
