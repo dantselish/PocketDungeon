@@ -78,6 +78,29 @@ public class LevelManager : MyMonoBehaviour
         return new List<Vector2Int>() { new Vector2Int(3, 4), new Vector2Int( 4, 3) };
     }
 
+    public bool TryGetHighlightedEnemy(out EnemyManager enemyManager)
+    {
+        const string LAYER_NAME = "Enemy";
+
+        enemyManager = null;
+
+        if (GM.CameraManager.RaycastFromCamera(Single.MaxValue, LayerMask.GetMask(LAYER_NAME), out RaycastHit hit))
+        {
+            Transform objectHit = hit.transform;
+
+            enemyManager = objectHit.GetComponent<EnemyManager>();
+            if (!enemyManager)
+            {
+                Debug.LogError($"No {nameof(EnemyManager)} component on object with {LAYER_NAME} layer!");
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void RegisterDiceBonus(StatBox statBox)
     {
         statBox.BonusApplied += StatBoxOnBonusApplied;

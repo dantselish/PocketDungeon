@@ -15,15 +15,16 @@ public class HeroManager : CharacterManager
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!IsMoving && GM.LevelManager.TurnState == TurnState.HERO)
+            if (CanMoveOrAttack && GM.LevelManager.TurnState == TurnState.HERO)
             {
-                if (GM.GridManager.GetHighlightedTile(out Tile tile))
+                if (GM.LevelManager.TryGetHighlightedEnemy(out EnemyManager enemyManager))
                 {
-                    if (tile.TryGetEnemy(out EnemyManager enemy))
-                    {
-                        TryAttack(enemy, tile);
-                    }
-                    else
+                    TryAttack(enemyManager);
+                }
+                else
+                if (GM.GridManager.TryGetHighlightedTile(out Tile tile))
+                {
+                    if (!tile.TryGetEnemy(out _))
                     {
                         List<Tile> path = GM.GridManager.GetPathToTile(GetMyTile().Coordinates, tile.Coordinates, Stats.RemainingSpeed.Value, false, out int distance);
 

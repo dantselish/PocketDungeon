@@ -31,27 +31,24 @@ public class GridManager : MyMonoBehaviour
         return path;
     }
 
-    public bool GetHighlightedTile(out Tile tile)
+    public bool TryGetHighlightedTile(out Tile tile)
     {
+        const string LAYER_NAME = "Tile";
+
         tile = null;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, LayerMask.GetMask(new []{"Tile"})))
+        if (GM.CameraManager.RaycastFromCamera(Single.MaxValue, LayerMask.GetMask(new []{LAYER_NAME}), out RaycastHit hit))
         {
             Transform objectHit = hit.transform;
 
-            if (objectHit.transform.CompareTag("Tile"))
+            tile = objectHit.GetComponent<Tile>();
+            if (!tile)
             {
-                tile = objectHit.GetComponent<Tile>();
-                if (!tile)
-                {
-                    Debug.LogError($"No {nameof(Tile)} component on object with Tile tag!");
-                    return false;
-                }
-
-                return true;
+                Debug.LogError($"No {nameof(Tile)} component on object with {LAYER_NAME} layer!");
+                return false;
             }
+
+            return true;
         }
 
         return false;

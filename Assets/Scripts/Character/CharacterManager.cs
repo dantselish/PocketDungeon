@@ -44,7 +44,10 @@ public abstract class CharacterManager : MyMonoBehaviour
         }
     }
 
+    public bool IsAttacking { get; private set; }
     public bool IsMoving => _movementCoroutine != null;
+    public bool CanMoveOrAttack => !IsMoving && !IsAttacking;
+
 
     public Vector2Int Coordinates
     {
@@ -174,13 +177,14 @@ public abstract class CharacterManager : MyMonoBehaviour
         return true;
     }
 
-    protected bool TryAttack(CharacterManager enemyManager, Tile enemyTile, bool useMaxAttackPoints = false)
+    protected bool TryAttack(CharacterManager enemyManager, bool useMaxAttackPoints = false)
     {
-        if (!CanAttack(enemyManager.Stats, enemyTile))
+        if (!CanAttack(enemyManager.Stats, enemyManager.CurrentTile))
         {
             return false;
         }
 
+        IsAttacking = true;
         enemyManager.LookAt(transform.position);
         animationManager.Attack(enemyManager.transform.position, onConnect);
         return true;
@@ -189,6 +193,7 @@ public abstract class CharacterManager : MyMonoBehaviour
         {
             int attackPointsUsed = Stats.AttackEnemy(enemyManager.Stats, useMaxAttackPoints);
             enemyManager.TakeDamage(attackPointsUsed, transform.position);
+            IsAttacking = false;
         }
     }
     #endregion

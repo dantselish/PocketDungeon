@@ -17,6 +17,6 @@ public class EnemyManager : CharacterManager
 
     public void TryAttackPlayer(HeroManager heroManager)
     {
-        TryAttack(heroManager, heroManager.CurrentTile, true);
+        TryAttack(heroManager, true);
     }
 }

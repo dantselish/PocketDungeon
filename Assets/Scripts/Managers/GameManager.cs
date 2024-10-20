@@ -7,9 +7,10 @@ public class GameManager : MonoBehaviour
 
     [FormerlySerializedAs("DebugUI")] [SerializeField] private UI ui;
 
-    public GridManager  GridManager  { get; private set; }
-    public LevelManager LevelManager { get; private set; }
-    public DiceManager  DiceManager  { get; private set; }
+    public GridManager   GridManager    { get; private set; }
+    public LevelManager  LevelManager   { get; private set; }
+    public DiceManager   DiceManager    { get; private set; }
+    public CameraManager CameraManager  { get; private set; }
 
     public LevelsContainer LevelsContainer;
 
@@ -32,9 +33,10 @@ public class GameManager : MonoBehaviour
 
     private void FindReferences()
     {
-        GridManager = FindObjectOfType<GridManager>();
-        LevelManager = FindObjectOfType<LevelManager>();
-        DiceManager = FindObjectOfType<DiceManager>();
+        CameraManager = FindObjectOfType<CameraManager>();
+        GridManager   = FindObjectOfType<GridManager>();
+        LevelManager  = FindObjectOfType<LevelManager>();
+        DiceManager   = FindObjectOfType<DiceManager>();
     }
 
     private void Initialize()
