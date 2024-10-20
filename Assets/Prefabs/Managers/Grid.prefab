@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GridSize: {x: 5, y: 5}
+  TileSize: {x: 2, y: 2}
   TilePrefab: {fileID: 7196323324573246643, guid: 08d4f9f19e5df9441b581a49334274ad, type: 3}
 --- !u!1 &6882271013058172640
 GameObject:
