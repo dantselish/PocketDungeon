@@ -49,7 +49,7 @@ public class LevelManager : MyMonoBehaviour
 
         InitEnemies(_level.GetAllEnemies());
 
-        SetTurnState(TurnState.ENERGY, 3f);
+        SetTurnState(TurnState.ENERGY, 2f);
     }
 
     public void EndHeroTurn()
