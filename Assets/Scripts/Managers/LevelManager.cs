@@ -220,7 +220,13 @@ public class LevelManager : MyMonoBehaviour
 
     private void RollDicesAndSpawnEnergy()
     {
-        _energyDiceBonuses = GM.DiceManager.GetDiceValues();
+        GM.DiceManager.RollDices();
+        GM.DiceManager.DicesRolled += DiceManagerOnDicesRolled;
+    }
+
+    private void DiceManagerOnDicesRolled(List<int> results)
+    {
+        _energyDiceBonuses = results;
     }
 
     private void StatBoxOnBonusApplied(StatBoxBonusAppliedParams eventParams)
