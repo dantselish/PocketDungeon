@@ -27,6 +27,8 @@ public abstract class CharacterManager : MyMonoBehaviour
     private Tile _currentTile;
     private GridManager _gridManager;
 
+    protected bool isDead;
+
     public Stats Stats { get; protected set; }
 
     public Tile CurrentTile
@@ -67,7 +69,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     public event Action<CharacterManager> CharacterDied;
 
 
-    public void Init(LevelManager levelManager)
+    public virtual void Init(LevelManager levelManager)
     {
         Stats = new Stats(Hp, Speed, Attack, Defence, AttackRange, levelManager);
 
@@ -226,6 +228,7 @@ public abstract class CharacterManager : MyMonoBehaviour
 
         CurrentTile.RemoveCharacterFromTile(this);
 
+        isDead = true;
         CharacterDied?.Invoke(this);
     }
 

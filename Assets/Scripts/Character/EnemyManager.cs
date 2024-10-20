@@ -2,8 +2,20 @@
 
 public class EnemyManager : CharacterManager
 {
+    private Outline[] _outlines;
+
     public override bool IsHero => false;
 
+
+    public override void Init(LevelManager levelManager)
+    {
+        base.Init(levelManager);
+
+        _outlines = GetComponentsInChildren<Outline>();
+        SetOutlinesActive(false);
+
+        CharacterDied += OnDeath;
+    }
 
     public void MoveToPosition(Tile tile)
     {
@@ -18,5 +30,33 @@ public class EnemyManager : CharacterManager
     public void TryAttackPlayer(HeroManager heroManager)
     {
         TryAttack(heroManager, true);
+    }
+
+    private void OnMouseEnter()
+    {
+        SetOutlinesActive(true);
+    }
+
+    private void OnMouseExit()
+    {
+        SetOutlinesActive(false);
+    }
+
+    private void SetOutlinesActive(bool isActive)
+    {
+        if (isDead)
+        {
+            isActive = false;
+        }
+
+        foreach (Outline outline in _outlines)
+        {
+            outline.enabled = isActive;
+        }
+    }
+
+    private void OnDeath(CharacterManager _)
+    {
+        SetOutlinesActive(false);
     }
 }
