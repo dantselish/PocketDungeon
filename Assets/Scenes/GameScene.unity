@@ -719,9 +719,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3431063266988694253, guid: cc6edf9b5b7018a458251c5ba181a787, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4692415769560919400, guid: cc6edf9b5b7018a458251c5ba181a787, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5779741882122259703, guid: cc6edf9b5b7018a458251c5ba181a787, type: 3}
       propertyPath: m_Name
       value: DiceManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6439684908057709957, guid: cc6edf9b5b7018a458251c5ba181a787, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8673109280895622592, guid: cc6edf9b5b7018a458251c5ba181a787, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7875475198024659036}
   - component: {fileID: 3195579915027418004}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DiceWall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 12, y: 5, z: 1}
+  m_Size: {x: 12, y: 15, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4692415769560919400
 GameObject:
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 69185602538617297}
   - component: {fileID: 7615905542503576590}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DiceWall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 12, y: 5, z: 1}
+  m_Size: {x: 12, y: 15, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5779741882122259703
 GameObject:
@@ -199,7 +199,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8243059247684622896}
   - component: {fileID: 8904248966554521808}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DiceWall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 12, y: 5, z: 1}
+  m_Size: {x: 12, y: 15, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8673109280895622592
 GameObject:
@@ -252,7 +252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1473437291885069924}
   - component: {fileID: 2109337969754473088}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DiceWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 12, y: 5, z: 1}
+  m_Size: {x: 12, y: 15, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8679613574716606379
 GameObject:

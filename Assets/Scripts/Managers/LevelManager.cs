@@ -190,7 +190,11 @@ public class LevelManager : MyMonoBehaviour
 
                 Tile attackTile = GM.GridManager.GetAttackHeroTile(enemyManager.Coordinates, enemyManager.Stats.AttackRange.Value);
                 enemyManager.MoveToPosition(attackTile);
-                yield return new WaitForSeconds(3f);
+                while (enemyManager.IsMoving)
+                {
+                    yield return new WaitForSeconds(0.25f);
+                }
+                yield return new WaitForSeconds(0.75f);
             }
 
             while (_enemies.Any(enemy => enemy.IsMoving))
@@ -211,7 +215,11 @@ public class LevelManager : MyMonoBehaviour
             foreach (EnemyManager enemyManager in _enemies)
             {
                 enemyManager.TryAttackPlayer(Hero);
-                yield return new WaitForSeconds(3f);
+                while (enemyManager.IsAttacking)
+                {
+                    yield return new WaitForSeconds(0.25f);
+                }
+                yield return new WaitForSeconds(0.75f);
             }
 
             NextTurnState();

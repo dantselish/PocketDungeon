@@ -60,7 +60,7 @@ public class DiceManager : MyMonoBehaviour
         if (_results.Count >= 3)
         {
             DicesRolled?.Invoke(_results);
-            DestroyDices();
+            Invoke(nameof(DestroyDices), 1f);
         }
     }
 }
