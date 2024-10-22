@@ -9,7 +9,5 @@ AnimatorOverrideController:
   m_Name: KnightAnimationController
   m_Controller: {fileID: 9100000, guid: bfb77a382668a0f4c8386b607a83d38c, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 7c09a6751a70b5b47ba907ae1d58a068, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 6ad12e1c226ac984ea9ad896e7023002, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: c9dc99f579e2e03459792366e9b941b8, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 635d7bd3cccf72f4b876abeb9ef73814, type: 2}

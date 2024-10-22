@@ -1384,6 +1384,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7683488747080083839}
     m_Modifications:
+    - target: {fileID: 5246351020800178841, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
+      propertyPath: Obstacle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6385572681661755899, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
       propertyPath: m_Name
       value: Tile (3,3)
@@ -2537,6 +2541,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7683488747080083839}
     m_Modifications:
+    - target: {fileID: 5246351020800178841, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
+      propertyPath: Obstacle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6385572681661755899, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
       propertyPath: m_Name
       value: Tile (1,1)
@@ -2735,6 +2743,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7683488747080083839}
     m_Modifications:
+    - target: {fileID: 5246351020800178841, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
+      propertyPath: Obstacle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6385572681661755899, guid: ee9dd4e0c103bde4285fb30eb486942a, type: 3}
       propertyPath: m_Name
       value: Tile (3,1)

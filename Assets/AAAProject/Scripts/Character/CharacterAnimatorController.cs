@@ -7,11 +7,15 @@ public class CharacterAnimationManager : MonoBehaviour
 {
     [SerializeField] private Animator Animator;
     [SerializeField] private AnimationEvents AnimationEvents;
-    [SerializeField] private List<GameObject> Weapons;
+    [SerializeField] private List<GameObject> MeleeWeapons;
+    [SerializeField] private List<GameObject> RangedWeapons;
     [SerializeField] private GameObject Shield;
     [SerializeField] private GameObject HealBottle;
+    [SerializeField] private Projectile projectile;
+    [SerializeField] private WeaponType WeaponType;
 
     private static readonly int _attack      = Animator.StringToHash("Attack");
+    private static readonly int _shoot       = Animator.StringToHash("Shoot");
     private static readonly int _take_damage = Animator.StringToHash("TakeDamage");
     private static readonly int _block       = Animator.StringToHash("Block");
     private static readonly int _die         = Animator.StringToHash("Die");
@@ -30,24 +34,50 @@ public class CharacterAnimationManager : MonoBehaviour
     private void Subscribe()
     {
         AnimationEvents.CheerEnded += () => HideShowWeaponsAndShield(true);
-        AnimationEvents.HealEnded  += () => HideShowWeapons(true);
+        AnimationEvents.HealEnded  += () => HideShowWeapons(WeaponType.HasFlag(WeaponType.MELEE) ? WeaponType.MELEE : WeaponType.RANGE, true);
         AnimationEvents.HealEnded  += () => HideShowHealBottle(false);
     }
 
-    public void Attack(Vector3 targetPos, Action onConnect = null)
+    public void Attack(Vector3 targetPos, int attackDistance, Action onConnect = null)
     {
+        bool isRanged;
+        if (WeaponType.HasFlag(WeaponType.MELEE) && WeaponType.HasFlag(WeaponType.RANGE))
+        {
+            isRanged = attackDistance > 3;
+        }
+        else
+        {
+            isRanged = WeaponType.HasFlag(WeaponType.RANGE);
+        }
+
+        HideShowWeapons(WeaponType.MELEE, !isRanged);
+        HideShowWeapons(WeaponType.RANGE, isRanged);
+
         SetLookAtTarget(targetPos);
-        Animator.SetTrigger(_attack);
+        Animator.SetTrigger(isRanged ? _shoot : _attack);
+
+        if (isRanged)
+        {
+            AnimationEvents.Shot += spawnProjectile;
+        }
 
         if (onConnect != null)
         {
             AnimationEvents.AttackConnected += callback;
+            projectile.Connected += callback;
 
             void callback()
             {
                 onConnect.Invoke();
                 AnimationEvents.AttackConnected -= callback;
+                projectile.Connected -= callback;
             }
+        }
+
+        void spawnProjectile()
+        {
+            projectile.Fly(targetPos, attackDistance * 0.1f);
+            AnimationEvents.Shot -= spawnProjectile;
         }
     }
 
@@ -85,7 +115,7 @@ public class CharacterAnimationManager : MonoBehaviour
         Battle(false);
         HideShowHealBottle(true);
         Animator.SetTrigger(_heal);
-        HideShowWeapons(false);
+        HideShowWeapons(WeaponType.MELEE | WeaponType.RANGE ,false);
     }
 
     public void Cheer()
@@ -117,11 +147,32 @@ public class CharacterAnimationManager : MonoBehaviour
         Animator.SetTrigger(_reset);
     }
 
-    private void HideShowWeapons(bool show)
+    private void HideShowWeapons(WeaponType weaponType, bool show)
     {
-        foreach (GameObject weapon in Weapons)
+        if (weaponType.HasFlag(WeaponType.MELEE))
         {
-            weapon.SetActive(show);
+            foreach (GameObject weapon in MeleeWeapons)
+            {
+                weapon.SetActive(show);
+            }
+
+            if (show)
+            {
+                HideShowShield(true);
+            }
+        }
+
+        if (weaponType.HasFlag(WeaponType.RANGE))
+        {
+            foreach (GameObject weapon in RangedWeapons)
+            {
+                weapon.SetActive(show);
+            }
+
+            if (show)
+            {
+                HideShowShield(false);
+            }
         }
     }
 
@@ -135,7 +186,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     private void HideShowWeaponsAndShield(bool show)
     {
-        HideShowWeapons(show);
+        HideShowWeapons(WeaponType.MELEE | WeaponType.RANGE, show);
         HideShowShield(show);
     }
 
@@ -143,4 +194,11 @@ public class CharacterAnimationManager : MonoBehaviour
     {
         HealBottle.SetActive(show);
     }
+}
+
+[Flags]
+public enum WeaponType
+{
+    MELEE = 1,
+    RANGE = 2
 }

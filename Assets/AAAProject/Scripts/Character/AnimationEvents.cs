@@ -6,6 +6,7 @@ public class AnimationEvents : MonoBehaviour
     public event Action AttackConnected;
     public event Action CheerEnded;
     public event Action HealEnded;
+    public event Action Shot;
 
 
     public void DealDamage()
@@ -21,5 +22,10 @@ public class AnimationEvents : MonoBehaviour
     public void EndHeal()
     {
         HealEnded?.Invoke();
+    }
+
+    public void Shoot()
+    {
+        Shot?.Invoke();
     }
 }

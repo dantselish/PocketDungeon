@@ -163,14 +163,16 @@ public abstract class CharacterManager : MyMonoBehaviour
         }
     }
 
-    protected bool CanAttack(Stats enemyStats, Tile enemyTile)
+    private bool CanAttack(Stats enemyStats, Tile enemyTile, out int distance)
     {
+        distance = 0;
+
         if (!CurrentTile.IsTileInLos(enemyTile))
         {
             return false;
         }
 
-        int distance = GM.GridManager.GetDistance(CurrentTile.Coordinates, enemyTile.Coordinates, false);
+        distance = GM.GridManager.GetDistance(CurrentTile.Coordinates, enemyTile.Coordinates, false);
         if (!Stats.CanAttack(enemyStats, distance))
         {
             return false;
@@ -181,14 +183,14 @@ public abstract class CharacterManager : MyMonoBehaviour
 
     protected bool TryAttack(CharacterManager enemyManager, bool useMaxAttackPoints = false)
     {
-        if (!CanAttack(enemyManager.Stats, enemyManager.CurrentTile))
+        if (!CanAttack(enemyManager.Stats, enemyManager.CurrentTile, out int distance))
         {
             return false;
         }
 
         IsAttacking = true;
         enemyManager.LookAt(transform.position);
-        animationManager.Attack(enemyManager.transform.position, onConnect);
+        animationManager.Attack(enemyManager.transform.position + Vector3.up, distance, onConnect);
         return true;
 
         void onConnect()
