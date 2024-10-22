@@ -29,6 +29,8 @@ public abstract class CharacterManager : MyMonoBehaviour
 
     protected bool isDead;
 
+    public event Action LevelBonusChosen;
+
     public Stats Stats { get; protected set; }
 
     public Tile CurrentTile
@@ -86,8 +88,6 @@ public abstract class CharacterManager : MyMonoBehaviour
         animationManager.Init();
 
         GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
-
-        Move(new List<Tile>(){ GM.GridManager.GetTileByCoordinates(startCoordinates) }, true);
     }
 
     protected Tile GetMyTile()
@@ -96,11 +96,6 @@ public abstract class CharacterManager : MyMonoBehaviour
     }
 
     #region Movement
-    public void LookAt(Vector3 position)
-    {
-        animationManager.SetLookAtTarget(position);
-    }
-
     public void Move(List<Tile> path, bool immediate = false)
     {
         if (immediate)
@@ -148,6 +143,11 @@ public abstract class CharacterManager : MyMonoBehaviour
     private void MoveToPosition(Vector3 position, float duration)
     {
         animationManager.MoveTo(position, duration);
+    }
+
+    private void LookAt(Vector3 position)
+    {
+        animationManager.SetLookAtTarget(position);
     }
     #endregion
 
@@ -206,6 +206,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     {
         animationManager.Heal();
         Stats.Heal();
+        Invoke(nameof(InvokeLevelBonusChosen), 3f);
     }
 
     public void ApplyAdditionalStat(StatType statType, int value)
@@ -217,6 +218,12 @@ public abstract class CharacterManager : MyMonoBehaviour
     {
         animationManager.Cheer();
         Stats.AddUpgradeToStat(statType);
+        Invoke(nameof(InvokeLevelBonusChosen), 3f);
+    }
+
+    private void InvokeLevelBonusChosen()
+    {
+        LevelBonusChosen?.Invoke();
     }
 
     protected virtual void Die()
@@ -243,6 +250,11 @@ public abstract class CharacterManager : MyMonoBehaviour
         else
         {
             animationManager.Battle(true);
+        }
+
+        if (state == TurnState.LOADING_NEXT_LEVEL)
+        {
+            Move(GM.LevelManager.GetPathToNextLevelTile());
         }
     }
 }

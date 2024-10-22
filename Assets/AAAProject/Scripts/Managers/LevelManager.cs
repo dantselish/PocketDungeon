@@ -24,8 +24,8 @@ public class LevelManager : MyMonoBehaviour
 
     public void InitFirstLevel()
     {
+        InitHero();
         SetTurnState(TurnState.LOADING_NEXT_LEVEL);
-        InitNextLevel();
     }
 
     private void InitNextLevel()
@@ -58,24 +58,6 @@ public class LevelManager : MyMonoBehaviour
         {
             NextTurnState();
         }
-    }
-
-    public List<Vector2Int> GetAllSpawnPos()
-    {
-        List<Vector2Int> positions = new List<Vector2Int>();
-        positions.Add(GetHeroSpawnPos());
-        positions.AddRange(GetEnemiesSpawnPos());
-        return positions;
-    }
-
-    public Vector2Int GetHeroSpawnPos()
-    {
-        return _level.HeroStartPosition;
-    }
-
-    public List<Vector2Int> GetEnemiesSpawnPos()
-    {
-        return new List<Vector2Int>() { new Vector2Int(3, 4), new Vector2Int( 4, 3) };
     }
 
     public bool TryGetHighlightedEnemy(out EnemyManager enemyManager)
@@ -111,14 +93,31 @@ public class LevelManager : MyMonoBehaviour
         healButton.Healed += HealButtonOnHealed;
     }
 
-    private void MoveHeroToNewLevel()
+    public List<Tile> GetPathToNextLevelTile()
     {
-        if (!_hero)
+        Tile targetTile = GM.GridManager.GetTileByCoordinates(_level.EndPosition);
+        if (targetTile == Hero.CurrentTile)
         {
-            _hero = Instantiate(HeroPrefab, transform);
-            _hero.Init(this);
+            return new List<Tile>();
         }
 
+        return GM.GridManager.GetPathToTile(Hero.Coordinates, _level.EndPosition, Int32.MaxValue, true, out _);
+    }
+
+    private Vector2Int GetHeroSpawnPos()
+    {
+        return _level.HeroStartPosition;
+    }
+
+    private void InitHero()
+    {
+        _hero = Instantiate(HeroPrefab, transform);
+        _hero.Init(this);
+        _hero.LevelBonusChosen += HeroOnLevelBonusChosen;
+    }
+
+    private void MoveHeroToNewLevel()
+    {
         List<Tile> path = new List<Tile>(){ GM.GridManager.GetTileByCoordinates(GetHeroSpawnPos()) };
         _hero.Move(path, true);
     }
@@ -158,6 +157,11 @@ public class LevelManager : MyMonoBehaviour
             if (turnState == TurnState.ENEMY_ATTACK)
             {
                 EnemiesTriggerAttack();
+            }
+
+            if (turnState == TurnState.LOADING_NEXT_LEVEL)
+            {
+                InitNextLevel();
             }
 
             TurnStateChanged?.Invoke(turnState);
@@ -264,8 +268,6 @@ public class LevelManager : MyMonoBehaviour
             }
 
             Hero.ApplyUpgradeStat(eventParams.statType);
-
-            SetTurnState(TurnState.LOADING_NEXT_LEVEL);
         }
     }
 
@@ -277,8 +279,6 @@ public class LevelManager : MyMonoBehaviour
         }
 
         Hero.Heal();
-
-        SetTurnState(TurnState.LOADING_NEXT_LEVEL);
     }
 
 
@@ -297,6 +297,14 @@ public class LevelManager : MyMonoBehaviour
         if (!_enemies.Any())
         {
             SetTurnState(TurnState.LEVEL_WON);
+        }
+    }
+
+    private void HeroOnLevelBonusChosen()
+    {
+        if (TurnState == TurnState.LEVEL_WON)
+        {
+            SetTurnState(TurnState.LOADING_NEXT_LEVEL);
         }
     }
 }
