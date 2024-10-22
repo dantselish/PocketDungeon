@@ -16,7 +16,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     [SerializeField] private int AttackRange;
 
     [Space]
-    [SerializeField] private Vector2Int startCoordinates;
+    [SerializeField] protected Vector2Int startCoordinates;
 
     [FormerlySerializedAs("HealthBar")]
     [Header("References")]

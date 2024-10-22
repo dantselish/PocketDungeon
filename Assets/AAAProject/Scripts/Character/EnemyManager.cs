@@ -7,9 +7,10 @@ public class EnemyManager : CharacterManager
     public override bool IsHero => false;
 
 
-    public override void Init(LevelManager levelManager)
+    public virtual void Init(LevelManager levelManager)
     {
         base.Init(levelManager);
+        Move(new List<Tile>(){GM.GridManager.GetTileByCoordinates(startCoordinates)}, true);
 
         _outlines = GetComponentsInChildren<Outline>();
         SetOutlinesActive(false);
