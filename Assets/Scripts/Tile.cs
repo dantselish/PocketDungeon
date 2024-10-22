@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MyMonoBehaviour
@@ -102,15 +101,5 @@ public class Tile : MyMonoBehaviour
 
         enemyManager = _characterOnTile as EnemyManager;
         return enemyManager;
-    }
-
-    private void OnMouseEnter()
-    {
-        GM.GridManager.SetHighlightedTile(this);
-    }
-
-    private void OnMouseExit()
-    {
-        GM.GridManager.RemoveHighlightedTile(this);
     }
 }

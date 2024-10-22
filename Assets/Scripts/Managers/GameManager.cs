@@ -41,9 +41,8 @@ public class GameManager : MonoBehaviour
 
     private void Initialize()
     {
-        GridManager.Init();
         LevelManager.InitFirstLevel();
-
+ 
         ui.Init();
     }
 }

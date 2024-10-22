@@ -13,16 +13,9 @@ public class GridManager : MyMonoBehaviour
     [Space]
     [Header("References")]
     [SerializeField] private Tile TilePrefab;
-    [SerializeField] private LineRenderer MovePathLine;
 
     private List<Tile> _tiles = new List<Tile>();
-    private Tile _currentTile;
 
-
-    public void Init()
-    {
-        GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
-    }
 
     public List<Tile> GetPathToTile(Vector2Int start, Vector2Int end, int maxDistance, bool allowWalkThroughMonsters, out int distance)
     {
@@ -104,25 +97,6 @@ public class GridManager : MyMonoBehaviour
         }
     }
 
-    public void SetHighlightedTile(Tile tile)
-    {
-        _currentTile = tile;
-        Debug.Log($"Tile highlighted {tile.Coordinates}");
-
-        var path = GetPathToTile(GM.LevelManager.Hero.CurrentTile.Coordinates, tile.Coordinates, Int32.MaxValue, false, out _);
-        SetMovePathLinePath(path.Select(x => x.CharacterPosition).ToArray());
-    }
-
-    public void RemoveHighlightedTile(Tile tile)
-    {
-        if (_currentTile == tile)
-        {
-            _currentTile = null;
-            Debug.Log($"Tile highlight removed {tile.Coordinates}");
-            ClearMovePathLine();
-        }
-    }
-
     private void SpawnTiles()
     {
         for (int curX = 0; curX < GridSize.x; curX++)
@@ -149,26 +123,5 @@ public class GridManager : MyMonoBehaviour
     private Tile GetTile(PathfindingNode node)
     {
         return GetTileByCoordinates(node.Coordinates.x, node.Coordinates.y);
-    }
-
-    private void ClearMovePathLine()
-    {
-        MovePathLine.positionCount = 0;
-    }
-
-    private void SetMovePathLinePath(Vector3[] positions)
-    {
-        MovePathLine.positionCount = positions.Length;
-        for (int i = 0; i < positions.Length; i++)
-        {
-            Vector3 position = positions[i];
-            position.y = 0f;
-            MovePathLine.SetPosition(i, position);
-        }
-    }
-
-    private void LevelManagerOnTurnStateChanged(TurnState state)
-    {
-        MovePathLine.gameObject.SetActive(state == TurnState.HERO);
     }
 }
