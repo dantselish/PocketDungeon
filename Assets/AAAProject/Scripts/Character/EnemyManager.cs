@@ -7,7 +7,7 @@ public class EnemyManager : CharacterManager
     public override bool IsHero => false;
 
 
-    public virtual void Init(LevelManager levelManager)
+    public void InitEnemy(LevelManager levelManager)
     {
         base.Init(levelManager);
         Move(new List<Tile>(){GM.GridManager.GetTileByCoordinates(startCoordinates)}, true);

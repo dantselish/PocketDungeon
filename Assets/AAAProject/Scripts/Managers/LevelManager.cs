@@ -130,7 +130,7 @@ public class LevelManager : MyMonoBehaviour
 
         foreach (EnemyManager enemy in _enemies)
         {
-            enemy.Init(this);
+            enemy.InitEnemy(this);
 
             enemy.CharacterDied += EnemyOnCharacterDied;
         }
