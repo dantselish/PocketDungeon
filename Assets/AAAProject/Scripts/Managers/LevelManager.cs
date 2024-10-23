@@ -15,6 +15,7 @@ public class LevelManager : MyMonoBehaviour
     private TurnState _currentTurnState;
     private List<int> _energyDiceBonuses;
     private Level _level;
+    private int _levelIndex;
 
     public event Action<TurnState> TurnStateChanged;
 
@@ -24,13 +25,14 @@ public class LevelManager : MyMonoBehaviour
 
     public void InitFirstLevel()
     {
+        _levelIndex = -1;
         InitHero();
         SetTurnState(TurnState.LOADING_NEXT_LEVEL);
     }
 
     private void InitNextLevel()
     {
-        Level nextLevelPrefab = GM.LevelsContainer.GetNextLevelPrefab(_level);
+        Level nextLevelPrefab = GM.LevelsContainer.GetNextLevelPrefab(++_levelIndex);
         Level nextLevel = Instantiate(nextLevelPrefab, transform);
         if (nextLevel)
         {
@@ -140,7 +142,7 @@ public class LevelManager : MyMonoBehaviour
 
         IEnumerator changeStateCoroutine()
         {
-            yield return new WaitForSeconds(delay); 
+            yield return new WaitForSeconds(delay);
 
             _currentTurnState = turnState;
 
@@ -304,7 +306,8 @@ public class LevelManager : MyMonoBehaviour
     {
         if (TurnState == TurnState.LEVEL_WON)
         {
-            SetTurnState(TurnState.LOADING_NEXT_LEVEL);
+            SetTurnState(TurnState.GOING_TO_NEXT_LEVEL, 2.5f);
+            SetTurnState(TurnState.LOADING_NEXT_LEVEL, 5f);
         }
     }
 }
@@ -320,5 +323,6 @@ public enum TurnState
 
     AFTER_LAST_DEFAULT_TURN_STATE,
     LEVEL_WON,
+    GOING_TO_NEXT_LEVEL,
     LOADING_NEXT_LEVEL
 }

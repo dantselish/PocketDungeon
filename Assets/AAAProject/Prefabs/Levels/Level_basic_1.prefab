@@ -803,6 +803,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 821473787577531724, guid: 976b92057264b1b4b8e0f574f1de417b, type: 3}
+      propertyPath: EndCoordinates.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 821473787577531724, guid: 976b92057264b1b4b8e0f574f1de417b, type: 3}
+      propertyPath: EndCoordinates.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 821473787577531724, guid: 976b92057264b1b4b8e0f574f1de417b, type: 3}
       propertyPath: Enemies.Array.size
       value: 2
       objectReference: {fileID: 0}

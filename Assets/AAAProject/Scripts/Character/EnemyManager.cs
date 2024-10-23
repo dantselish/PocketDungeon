@@ -11,6 +11,7 @@ public class EnemyManager : CharacterManager
     {
         base.Init(levelManager);
         Move(new List<Tile>(){GM.GridManager.GetTileByCoordinates(startCoordinates)}, true);
+        Invoke(nameof(LookDown), 0.1f);
 
         _outlines = GetComponentsInChildren<Outline>();
         SetOutlinesActive(false);

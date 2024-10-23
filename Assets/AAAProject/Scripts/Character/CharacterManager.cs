@@ -21,7 +21,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     [FormerlySerializedAs("HealthBar")]
     [Header("References")]
     [SerializeField] private HealthBar healthBar;
-    [SerializeField] private CharacterAnimationManager animationManager;
+    [SerializeField] protected CharacterAnimationManager animationManager;
 
     private IEnumerator _movementCoroutine;
     private Tile _currentTile;
@@ -113,6 +113,11 @@ public abstract class CharacterManager : MyMonoBehaviour
     {
         CurrentTile = path.Last();
 
+        if (_movementCoroutine != null)
+        {
+            StopCoroutine(_movementCoroutine);
+        }
+
         _movementCoroutine = moveCoroutine();
         StartCoroutine(_movementCoroutine);
 
@@ -143,6 +148,20 @@ public abstract class CharacterManager : MyMonoBehaviour
     private void MoveToPosition(Vector3 position, float duration)
     {
         animationManager.MoveTo(position, duration);
+    }
+
+    protected void LookDown()
+    {
+        Vector3 target = transform.position;
+        target.z -= 10f;
+        LookAt(target);
+    }
+
+    protected void LookRight()
+    {
+        Vector3 target = transform.position;
+        target.x += 10f;
+        LookAt(target);
     }
 
     private void LookAt(Vector3 position)
@@ -206,7 +225,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     {
         animationManager.Heal();
         Stats.Heal();
-        Invoke(nameof(InvokeLevelBonusChosen), 3f);
+        InvokeLevelBonusChosen();
     }
 
     public void ApplyAdditionalStat(StatType statType, int value)
@@ -218,7 +237,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     {
         animationManager.Cheer();
         Stats.AddUpgradeToStat(statType);
-        Invoke(nameof(InvokeLevelBonusChosen), 3f);
+        InvokeLevelBonusChosen();
     }
 
     private void InvokeLevelBonusChosen()
@@ -241,20 +260,7 @@ public abstract class CharacterManager : MyMonoBehaviour
         CharacterDied?.Invoke(this);
     }
 
-    private void LevelManagerOnTurnStateChanged(TurnState state)
+    protected virtual void LevelManagerOnTurnStateChanged(TurnState state)
     {
-        if (state == TurnState.LEVEL_WON)
-        {
-            animationManager.Battle(false);
-        }
-        else
-        {
-            animationManager.Battle(true);
-        }
-
-        if (state == TurnState.LOADING_NEXT_LEVEL)
-        {
-            Move(GM.LevelManager.GetPathToNextLevelTile());
-        }
     }
 }

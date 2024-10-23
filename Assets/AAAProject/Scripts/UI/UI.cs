@@ -6,7 +6,6 @@ public class UI : MyMonoBehaviour
 {
     [SerializeField] private StatsScreen   StatsScreen;
     [SerializeField] private HealthScreen  HealthScreen;
-    [SerializeField] private HeroHPUI      HeroHP;
     [SerializeField] private Button        EndHeroTurnButton;
     [SerializeField] private LoadingScreen LoadingScreen;
 
@@ -16,8 +15,7 @@ public class UI : MyMonoBehaviour
         Stats heroStats = GM.LevelManager.Hero.Stats;
 
         StatsScreen.Init(heroStats);
-        HealthScreen.Init();
-        HeroHP.Init(heroStats);
+        HealthScreen.Init(GM.LevelManager, heroStats);
 
         EndHeroTurnButton.onClick.AddListener(OnEndHeroTurnButtonClicked);
 

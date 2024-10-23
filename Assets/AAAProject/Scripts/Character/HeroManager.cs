@@ -49,4 +49,26 @@ public class HeroManager : CharacterManager
 
         Debug.Log("Hero Is Dead");
     }
+
+    protected override void LevelManagerOnTurnStateChanged(TurnState state)
+    {
+        if (state == TurnState.LEVEL_WON)
+        {
+            animationManager.Battle(false);
+        }
+        else
+        {
+            animationManager.Battle(true);
+        }
+
+        if (state == TurnState.GOING_TO_NEXT_LEVEL)
+        {
+            Move(GM.LevelManager.GetPathToNextLevelTile());
+        }
+
+        if (state == TurnState.LEVEL_WON || state == TurnState.LOADING_NEXT_LEVEL)
+        {
+            LookRight();
+        }
+    }
 }

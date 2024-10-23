@@ -18,15 +18,13 @@ public class LevelsContainer : ScriptableObject
         return Levels[index];
     }
 
-    public Level GetNextLevelPrefab(Level level)
+    public Level GetNextLevelPrefab(int levelIndex)
     {
-        int levelIndex = Array.IndexOf(Levels, level);
         if (levelIndex < 0)
         {
             return Levels[0];
         }
 
-        ++levelIndex;
         if (levelIndex >= Levels.Length)
         {
             return null;

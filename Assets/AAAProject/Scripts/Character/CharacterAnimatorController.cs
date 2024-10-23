@@ -25,6 +25,8 @@ public class CharacterAnimationManager : MonoBehaviour
     private static readonly int _cheer       = Animator.StringToHash("Cheer");
     private static readonly int _reset       = Animator.StringToHash("Reset");
 
+    private Sequence _moveSequence;
+
 
     public void Init()
     {
@@ -33,7 +35,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     private void Subscribe()
     {
-        AnimationEvents.CheerEnded += () => HideShowWeaponsAndShield(true);
+        AnimationEvents.CheerEnded += () => HideShowWeapons(WeaponType.HasFlag(WeaponType.MELEE) ? WeaponType.MELEE : WeaponType.RANGE, true);
         AnimationEvents.HealEnded  += () => HideShowWeapons(WeaponType.HasFlag(WeaponType.MELEE) ? WeaponType.MELEE : WeaponType.RANGE, true);
         AnimationEvents.HealEnded  += () => HideShowHealBottle(false);
     }
@@ -132,7 +134,12 @@ public class CharacterAnimationManager : MonoBehaviour
 
     public void MoveTo(Vector3 position, float duration)
     {
-        transform.DOMove(position, duration).SetEase(Ease.Linear);
+        if (_moveSequence != null)
+        {
+            _moveSequence.Kill();
+        }
+        _moveSequence = DOTween.Sequence();
+        _moveSequence.Append(transform.DOMove(position, duration).SetEase(Ease.Linear)).AppendCallback(() => _moveSequence = null);
     }
 
     private void Rotate(Vector3 target)

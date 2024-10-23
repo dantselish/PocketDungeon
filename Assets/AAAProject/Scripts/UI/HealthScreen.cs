@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 
-public class HealthScreen : MyMonoBehaviour
+public class HealthScreen : MonoBehaviour
 {
-    [SerializeField] private HealButton HealButton;
+    [SerializeField] private HealButton  HealButton;
+    [SerializeField] private HeroHPUI    HeroHp;
+    [SerializeField] private TurnStateUI TurnState;
 
 
-    public void Init()
+    public void Init(LevelManager levelManager, Stats heroStats)
     {
-        HealButton.Init(GM.LevelManager);
+        HeroHp.Init(heroStats);
+        HealButton.Init(levelManager);
+        TurnState.Init(levelManager);
     }
 }
