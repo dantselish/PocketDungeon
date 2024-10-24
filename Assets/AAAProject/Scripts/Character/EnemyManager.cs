@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class EnemyManager : CharacterManager
 {
@@ -7,14 +8,17 @@ public class EnemyManager : CharacterManager
     public override bool IsHero => false;
 
 
+    private void Awake()
+    {
+        _outlines = GetComponentsInChildren<Outline>();
+        SetOutlinesActive(false);
+    }
+
     public void InitEnemy(LevelManager levelManager)
     {
         base.Init(levelManager);
         Move(new List<Tile>(){GM.GridManager.GetTileByCoordinates(startCoordinates)}, true);
         Invoke(nameof(LookDown), 0.1f);
-
-        _outlines = GetComponentsInChildren<Outline>();
-        SetOutlinesActive(false);
 
         CharacterDied += OnDeath;
     }

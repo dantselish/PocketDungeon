@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 1175304283911467929}
   - component: {fileID: 821473787577531724}
   - component: {fileID: 5940542558991078170}
+  - component: {fileID: 6850246975312294292}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -89,7 +90,7 @@ Transform:
   m_GameObject: {fileID: 5793403130977333543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4034452, y: 1.4876229, z: 1.5228751}
+  m_LocalPosition: {x: 0, y: -2, z: -0.47712493}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -112,6 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HeroStartCoordinates: {x: 0, y: 0}
+  EndCoordinates: {x: 0, y: 0}
   Enemies: []
 --- !u!114 &5940542558991078170
 MonoBehaviour:
@@ -134,6 +136,21 @@ MonoBehaviour:
   - {fileID: 1980728021681458640, guid: 1128f93e2e94b144fa66e2bc8b6fe432, type: 3}
   GridSize: {x: 5, y: 5}
   TileSize: {x: 2, y: 2}
+  RotateTiles: 0
+--- !u!114 &6850246975312294292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5793403130977333543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e124042612e14642800c86d5224f3cd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OldMaterial: {fileID: 0}
+  NewMaterial: {fileID: 0}
 --- !u!1 &5802047246421766787
 GameObject:
   m_ObjectHideFlags: 0

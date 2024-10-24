@@ -22,6 +22,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     [Header("References")]
     [SerializeField] private HealthBar healthBar;
     [SerializeField] protected CharacterAnimationManager animationManager;
+    [SerializeField] private CharacterParticles particlesManager;
 
     private IEnumerator _movementCoroutine;
     private Tile _currentTile;
@@ -86,6 +87,7 @@ public abstract class CharacterManager : MyMonoBehaviour
         }
 
         animationManager.Init();
+        particlesManager.PlayIdleParticle();
 
         GM.LevelManager.TurnStateChanged += LevelManagerOnTurnStateChanged;
     }
@@ -216,6 +218,7 @@ public abstract class CharacterManager : MyMonoBehaviour
         {
             int attackPointsUsed = Stats.AttackEnemy(enemyManager.Stats, useMaxAttackPoints);
             enemyManager.TakeDamage(attackPointsUsed, transform.position);
+            particlesManager.PlayHitParticle(enemyManager.transform.position + Vector3.up);
             IsAttacking = false;
         }
     }
@@ -248,6 +251,7 @@ public abstract class CharacterManager : MyMonoBehaviour
     protected virtual void Die()
     {
         animationManager.Die();
+        particlesManager.StopIdleParticle();
 
         if (healthBar)
         {

@@ -1209,15 +1209,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.1051
+      value: 1.6213269
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.1476
+      value: 1.65406
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.77019
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.95
+      value: 8.11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1225,7 +1229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.27
+      value: 6.73
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5eeab1ae1a3f712499fa6d9a5b619c37, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2706,6 +2710,10 @@ PrefabInstance:
     - target: {fileID: 2895028351155391968, guid: 79ca006b106d5ba46b8379f8c9b88314, type: 3}
       propertyPath: m_Name
       value: torch_mounted
+      objectReference: {fileID: 0}
+    - target: {fileID: 2895028351155391968, guid: 79ca006b106d5ba46b8379f8c9b88314, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
