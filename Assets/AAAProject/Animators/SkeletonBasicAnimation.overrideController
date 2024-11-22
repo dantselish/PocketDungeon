@@ -6,8 +6,8 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GolemAnimation
+  m_Name: SkeletonBasicAnimation
   m_Controller: {fileID: 9100000, guid: f148bedd39b2b7d468926a7bcda291fe, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 3b721b40832bfdf42b2d99907798a9a7, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 8f1d4ab7a7245fa45a49075f690d2506, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6afb47582cad5144480050fc831a435c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2a91d519e7280534080c5f38e1a61ece, type: 2}

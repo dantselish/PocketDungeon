@@ -209,7 +209,7 @@ MonoBehaviour:
   Speed: 100
   Attack: 100
   Defence: 1
-  AttackRange: 100
+  AttackRange: 2
   startCoordinates: {x: 0, y: 0}
   healthBar: {fileID: 0}
   animationManager: {fileID: 2492965015232742806}

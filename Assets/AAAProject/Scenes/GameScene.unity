@@ -445,8 +445,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 4469348848786420835, guid: 833de21f708e0d64eb732a917a53b5b8, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 833de21f708e0d64eb732a917a53b5b8, type: 3}
@@ -623,10 +622,6 @@ PrefabInstance:
       propertyPath: ui
       value: 
       objectReference: {fileID: 1200507616}
-    - target: {fileID: 7248978705312193596, guid: 26e75a0482656e340a9a4e7803b6af77, type: 3}
-      propertyPath: LevelsContainer
-      value: 
-      objectReference: {fileID: 11400000, guid: 73d1a3f8dc2f7bc4c8d2c983d22a2c7b, type: 2}
     - target: {fileID: 7547209962857627967, guid: 26e75a0482656e340a9a4e7803b6af77, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2

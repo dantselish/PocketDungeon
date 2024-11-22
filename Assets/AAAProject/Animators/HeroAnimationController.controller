@@ -380,7 +380,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RogueAnimationController
+  m_Name: HeroAnimationController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Attack
