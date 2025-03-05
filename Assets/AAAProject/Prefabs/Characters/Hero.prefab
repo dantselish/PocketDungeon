@@ -206,8 +206,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hp: 6
-  Speed: 100
-  Attack: 100
+  Speed: 1
+  Attack: 1
   Defence: 1
   AttackRange: 2
   startCoordinates: {x: 0, y: 0}
